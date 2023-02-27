@@ -80,6 +80,7 @@ async def send_curs(message: types.Message):
         text = """команды бота:
         /adduser user_name добавлять пользователя и отпраляет .conf файл и qr-code
         /remove user_name удаляет пользователя
+        /getconfig user_name прищлет конфиг пользователя
         /client выводит список клиентов"""
         await message.answer(text)
 
