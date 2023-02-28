@@ -52,7 +52,7 @@ async def add_user(message: types.Message):
         clients = get_client_list()
 
         text = "Connected clients:\n- "
-        text += '\n- '.join([c for c in clients if c != ''])
+        text += '\n- '.join([f'{c[0]} {c[1]}' for c in clients if c[0] != ''])
         await message.answer(text)
 
 
@@ -83,6 +83,7 @@ async def send_curs(message: types.Message):
         /getconfig user_name прищлет конфиг пользователя
         /client выводит список клиентов"""
         await message.answer(text)
+
 
 @dp.message_handler()
 async def send_curs(message: types.Message):
