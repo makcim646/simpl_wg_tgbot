@@ -11,7 +11,7 @@ def root_add(id_user):
 def get_client_list():
     call = subprocess.check_output("awk '/# BEGIN_PEER/ {print $3}' /etc/wireguard/wg0.conf", shell=True)
     client_list = call.decode('utf-8').split('\n')
-    call = subprocess.check_output("awk '/AllowedIPs/ {print $3}' /etc/wireguard/wg0.conf", shell=True)
+    call = subprocess.check_output("awk '/AllowedIPs/ {print $3, $4}' /etc/wireguard/wg0.conf", shell=True)
     ip_list = call.decode('utf-8').split('\n')
     
     return [[client, ip_list[n]] for n , client in enumerate(client_list)]
