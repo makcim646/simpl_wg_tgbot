@@ -1,12 +1,13 @@
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+
 from db import *
 
+setting = get_config()
 
-
-bot = Bot("") #Telegram bot token
-admin = 000000 #admin tgid
+bot = Bot(setting['bot_token']) #Telegram bot token
+admin = int(setting['admin_id']) #admin tgid
 dp = Dispatcher(bot)
 
 
@@ -51,15 +52,15 @@ async def add_user(message: types.Message):
     if message.chat.id == admin:
         clients = get_client_list()
 
-        text = "Connected clients:\n- "
+        text = "Connected clients:\n "
         for c in clients:
             if c[0] != '':
                 ipv4, ipv6 = c[1].split(',')
-                text += f'- {c[0]}\n'
-                text += f'\t{ipv4}\n'
-                text += f'\t{ipv6}\n'
+                text += f'\- `{c[0]}`\n'
+                text += f'\tipv4 `{ipv4}`\n'
+                text += f'\tipv6 `{ipv6}`\n'
 
-        await message.answer(text)
+        await message.answer(text, parse_mode='MarkdownV2')
 
 
 @dp.message_handler(commands=['getconfig'])
