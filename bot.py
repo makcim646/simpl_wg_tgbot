@@ -52,7 +52,13 @@ async def add_user(message: types.Message):
         clients = get_client_list()
 
         text = "Connected clients:\n- "
-        text += '\n- '.join([f'{c[0]} {c[1]}' for c in clients if c[0] != ''])
+        for c in clients:
+            if c[0] != '':
+                ipv4, ipv6 = c[1].split(',')
+                text += f'{c[0]}\n'
+                text += f'\t{ipv4}\n'
+                text += f'\t{ipv6}\n'
+
         await message.answer(text)
 
 
