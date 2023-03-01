@@ -55,7 +55,7 @@ async def add_user(message: types.Message):
         for c in clients:
             if c[0] != '':
                 ipv4, ipv6 = c[1].split(',')
-                text += f'{c[0]}\n'
+                text += f'- {c[0]}\n'
                 text += f'\t{ipv4}\n'
                 text += f'\t{ipv6}\n'
 
