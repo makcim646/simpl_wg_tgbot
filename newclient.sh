@@ -49,7 +49,7 @@ EOF
 cat << EOF > "$pwd/conf/$1.conf"
 [Interface]
 Address = 10.7.0.$octet/24, $(yggdrasilctl getSelf | awk '/IPv6 subnet/{print $3}' | cut -d '/' -f 1)$octet/64
-DNS = 10.7.0.1
+DNS = 8.8.8.8, 1.1.1.1
 PrivateKey = $key
 
 [Peer]

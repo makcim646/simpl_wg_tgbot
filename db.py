@@ -15,7 +15,7 @@ def get_client_list():
     call = subprocess.check_output("awk '/AllowedIPs/ {print $3, $4}' /etc/wireguard/wg0.conf", shell=True)
     ip_list = call.decode('utf-8').split('\n')
     
-    return [[client, ip_list[n]] for n , client in enumerate(client_list)]
+    return [[client, ip_list[n]] for n, client in enumerate(client_list)]
 
 
 def deactive_user_db(id_user):
@@ -60,6 +60,6 @@ def get_config(path='setting.ini'):
 
 if __name__ == "__main__":
     #add_in_db(34342322)
-    get_client_list()
+    print(get_client_list())
     pass
 
