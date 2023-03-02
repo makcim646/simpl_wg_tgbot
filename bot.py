@@ -55,10 +55,11 @@ async def add_user(message: types.Message):
         text = "Connected clients:\n "
         for c in clients:
             if c[0] != '':
-                ipv4, ipv6 = c[1].split(',')
                 text += f'\- `{c[0]}`\n'
-                text += f'\tipv4 `{ipv4}`\n'
-                text += f'\tipv6 `{ipv6}`\n'
+                for ip in c[1].split(','):
+                    ip_adr, mask = ip.split('/')
+                    ip_v = 'ipv6' if '::' in ip_adr else 'ipv4'
+                    text += f'\t{ip_v} `{ip_adr}`/{mask}\n'
 
         await message.answer(text, parse_mode='MarkdownV2')
 
