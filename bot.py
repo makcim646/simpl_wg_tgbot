@@ -57,9 +57,9 @@ async def add_user(message: types.Message):
             if c[0] != '':
                 text += f'\- `{c[0]}`\n'
                 for ip in c[1].split(','):
-                    ip_adr, mask = ip.split('/')
+                    ip_adr, mask = ip.split('/') if '/' in ip else [ip, '']
                     ip_v = 'ipv6' if '::' in ip_adr else 'ipv4'
-                    text += f'\t{ip_v} `{ip_adr}`/{mask}\n'
+                    text += f'\t{ip_v}`{ip_adr}`/{mask}\n'
 
         await message.answer(text, parse_mode='MarkdownV2')
 
