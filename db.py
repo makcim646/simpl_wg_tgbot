@@ -2,11 +2,16 @@ import subprocess
 import configparser
 import os
 
-def root_add(id_user):
+def root_add(id_user, ygg=False):
     #создает навовый конфиг для подключения к wireguard
-    if subprocess.call(["./newclient.sh", id_user]) == 0:
-        return True
-    return False
+    if ygg:
+        if subprocess.call(["./newclient.sh", id_user, 'ygg']) == 0:
+            return True
+        return False
+    else:
+        if subprocess.call(["./newclient.sh", id_user]) == 0:
+            return True
+        return False
 
 
 def get_client_list():

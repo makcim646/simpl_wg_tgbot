@@ -1,6 +1,7 @@
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from db import *
 
@@ -15,20 +16,42 @@ dp = Dispatcher(bot)
 async def add_user(message: types.Message):
     if message.chat.id == admin:
         try:
-            id_user = message.text.split(' ')[1]
+            client_name = message.text.split(' ')[1]
         except:
             await bot.send_message(message.chat.id, 'ты не ввел имя пользователя')
             return
-      
-        if root_add(id_user):
-            with open(f'png/{id_user}.png', 'rb') as pfoto:
-                await bot.send_photo(message.chat.id, pfoto)
-            with open(f'conf/{id_user}.conf', 'rb') as file:
-                await bot.send_document(message.chat.id, file)
-           
-        else:
-            await bot.send_message(message.chat.id, 'Не удалось добавить')
+        
+        button1 = InlineKeyboardButton("Подключить с ipv6", callback_data=f'connect_{client_name}_yes')
+        button2 = InlineKeyboardButton("Подключить без ipv6", callback_data=f'connect_{client_name}_no')
+        otvet = InlineKeyboardMarkup().add(button1, button2)
+        await message.answer(F"Подключить пользователя {client_name}", reply_markup=otvet)
             
+
+
+@dp.callback_query_handler(lambda c: c.data[:7] == 'connect')
+async def connect_user(callback: types.CallbackQuery):
+    id_user = callback.from_user.id
+    print(callback.data.split('_'))
+    if id_user == admin:
+        _, client_name, ygg = callback.data.split('_')
+        if ygg == 'yes':
+            print(client_name, ygg)
+            """"if root_add(client_name, True):
+                with open(f'png/{client_name}.png', 'rb') as pfoto:
+                    await bot.send_photo(id_user, pfoto)
+                with open(f'conf/{client_name}.conf', 'rb') as file:
+                    await bot.send_document(id_user, file)
+            else:
+                await bot.send_message(id_user, 'Не удалось добавить')"""
+        else:
+            print(client_name, ygg)
+            """if root_add(client_name):
+                with open(f'png/{client_name}.png', 'rb') as pfoto:
+                    await bot.send_photo(id_user, pfoto)
+                with open(f'conf/{client_name}.conf', 'rb') as file:
+                    await bot.send_document(id_user, file)
+            else:
+                await bot.send_message(id_user, 'Не удалось добавить')"""
 
 
 @dp.message_handler(commands=['remove'])
