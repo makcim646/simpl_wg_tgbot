@@ -25,6 +25,35 @@ def get_client_list():
     return [[client, ip_list[n]] for n, client in enumerate(client_list)]
 
 
+def get_active_list():
+    call = subprocess.check_output("awk '/^# BEGIN_PEER / {peer=$3} /^PublicKey/ {print peer, $3}' /etc/wireguard/wg0.conf",
+                                   shell=True)
+    
+    client_data = call.decode('utf-8').split('\n')
+    
+    client_key = {}
+    for data in client_data:
+        if data != '':
+            name, peer = data.split(' ')
+            client_key[peer.strip()] = name
+            
+    call = subprocess.check_output("wg | awk '/peer/ {peer=$2} /latest handshake/ {last=$0} /endpoint/ {end=$2} /transfer:/ {print $0, \"|\", peer, \"|\", last, \"|\", end}'",
+                                   shell=True)
+    client_list = call.decode('utf-8').split('\n')
+    
+    print(client_list)
+            
+    keys = {}
+    for client in client_list:
+        if client != '':
+            transfer, key, last_time, endpoint = client.split('|')
+            keys[key.strip()] = (last_time.strip().split(':')[1], transfer.strip(), endpoint.strip())
+            
+    
+    return [[client_key[key], keys[key][0], keys[key][1], keys[key][2]] for key in keys.keys()]
+    
+
+
 def deactive_user_db(id_user):
     #удаеть конфиг клиента из wireguard и отмечает это в своей базе
     id_user = str(id_user)
@@ -67,6 +96,6 @@ def get_config(path='setting.ini'):
 
 if __name__ == "__main__":
     #add_in_db(34342322)
-    print(get_client_list())
+    print(get_active_list())
     pass
 

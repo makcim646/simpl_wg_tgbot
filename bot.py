@@ -35,23 +35,21 @@ async def connect_user(callback: types.CallbackQuery):
     if id_user == admin:
         _, client_name, ygg = callback.data.split('_')
         if ygg == 'yes':
-            print(client_name, ygg)
-            """"if root_add(client_name, True):
+            if root_add(client_name, True):
                 with open(f'png/{client_name}.png', 'rb') as pfoto:
                     await bot.send_photo(id_user, pfoto)
                 with open(f'conf/{client_name}.conf', 'rb') as file:
                     await bot.send_document(id_user, file)
             else:
-                await bot.send_message(id_user, 'Не удалось добавить')"""
+                await bot.send_message(id_user, 'Не удалось добавить')
         else:
-            print(client_name, ygg)
-            """if root_add(client_name):
+            if root_add(client_name):
                 with open(f'png/{client_name}.png', 'rb') as pfoto:
                     await bot.send_photo(id_user, pfoto)
                 with open(f'conf/{client_name}.conf', 'rb') as file:
                     await bot.send_document(id_user, file)
             else:
-                await bot.send_message(id_user, 'Не удалось добавить')"""
+                await bot.send_message(id_user, 'Не удалось добавить')
 
 
 @dp.message_handler(commands=['remove'])
@@ -67,7 +65,21 @@ async def add_user(message: types.Message):
             await message.answer(f'пользователь {id_user} удален')
         else:
             await message.answer('неудалось удалить')
-       
+
+
+@dp.message_handler(commands=['active'])
+async def active(message: types.Message):
+    if message.chat.id == admin:
+        clients = get_active_list()
+        text = 'Active Clients\n'
+        for name, last_time, transfer, endpoind in clients:
+            text += f'-{name}\n'
+            text += f'\t{last_time}\n'
+            text += f'\t{transfer}\n'
+            text += f'\t{endpoind}\n'
+            
+        await message.answer(text)
+    
 
 
 @dp.message_handler(commands=['client'])
@@ -82,7 +94,7 @@ async def add_user(message: types.Message):
                 for ip in c[1].split(','):
                     ip_adr, mask = ip.split('/') if '/' in ip else [ip, '']
                     ip_v = 'ipv6' if '::' in ip_adr else 'ipv4'
-                    text += f'\t{ip_v}`{ip_adr}`/{mask}\n'
+                    text += f'\t{ip_v}` {ip_adr}`/{mask}\n'
 
         await message.answer(text, parse_mode='MarkdownV2')
 
@@ -112,7 +124,8 @@ async def send_curs(message: types.Message):
         /adduser user_name добавлять пользователя и отпраляет .conf файл и qr-code
         /remove user_name удаляет пользователя
         /getconfig user_name прищлет конфиг пользователя
-        /client выводит список клиентов"""
+        /client выводит список клиентов
+        /active выводит список активных пользователей"""
         await message.answer(text)
 
 
